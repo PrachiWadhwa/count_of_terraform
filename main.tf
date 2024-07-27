@@ -3,11 +3,11 @@ resource "newrelic_alert_policy" "mypolicy" {
 }
 
 resource "newrelic_nrql_alert_condition" "mypolicy" {
-  count                          =  length( var.alerts_name)
+  count                         = length( var.newrelicconfig)
   account_id                     = var.account_id
   policy_id                      = newrelic_alert_policy.mypolicy.id
   type                           = "static"
-  name                           =  var.alerts_name[count.index]
+  name                           =  var.newrelicconfig[count.index].name
   description                    = "Alert when transactions are taking too long"
   runbook_url                    = "https://www.example.com"
   enabled                        = true
@@ -23,7 +23,7 @@ resource "newrelic_nrql_alert_condition" "mypolicy" {
   slide_by                       = 30
 
   nrql {
-    query =  var.nrql[count.index]
+    query =  var.newrelicconfig[count.index].nrql
   }
 
   critical {
