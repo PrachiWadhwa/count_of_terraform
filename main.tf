@@ -1,42 +1,42 @@
 resource "newrelic_alert_policy" "mypolicy" {
-  name = "mypolicy"
+  name =  var.policy_name
 }
 
 resource "newrelic_nrql_alert_condition" "mypolicy" {
+  policy_id                      = newrelic_alert_policy.mypolicy.id
   count                         = length( var.newrelicconfig)
   account_id                     = var.account_id
-  policy_id                      = newrelic_alert_policy.mypolicy.id
-  type                           = "static"
+  type                           = var.newrelicconfig[count.index].type
   name                           =  var.newrelicconfig[count.index].name
-  description                    = "Alert when transactions are taking too long"
-  runbook_url                    = "https://www.example.com"
+  description                    = var.newrelicconfig[count.index].type
+  runbook_url                    = var.newrelicconfig[count.index].type
   enabled                        = var.newrelicconfig[count.index].enabled
-  violation_time_limit_seconds   = 3600
-  fill_option                    = "static"
+  violation_time_limit_seconds   = var.newrelicconfig[count.index].violation_time_limit_seconds
+  fill_option                    = var.newrelicconfig[count.index].fill_option
   fill_value                     =  var.newrelicconfig[count.index].fill_value
-  aggregation_window             = 60
-  aggregation_method             = "event_flow"
-  aggregation_delay              = 120
-  expiration_duration            = 120
-  open_violation_on_expiration   = true
-  close_violations_on_expiration = true
-  slide_by                       = 30
+  aggregation_window             = var.newrelicconfig[count.index].aggregation_window
+  aggregation_method             = var.newrelicconfig[count.index].aggregation_method
+  aggregation_delay              =var.newrelicconfig[count.index].aggregation_delay
+  expiration_duration            =var.newrelicconfig[count.index].expiration_duration
+  open_violation_on_expiration   = var.newrelicconfig[count.index].open_violation_on_expiration
+  close_violations_on_expiration = var.newrelicconfig[count.index].close_violations_on_expiration
+  slide_by                       = var.newrelicconfig[count.index].slide_by
 
   nrql {
-    query =  var.newrelicconfig[count.index].nrql
+    query =  var.newrelicconfig[count.index].query
   }
 
   critical {
-    operator              = "above"
-    threshold             = 5.5
-    threshold_duration    = 300
-    threshold_occurrences = "ALL"
+    operator              = var.newrelicconfig[count.index].operator
+    threshold             =var.newrelicconfig[count.index].threshold
+    threshold_duration    = var.newrelicconfig[count.index].threshold_duration
+    threshold_occurrences = var.newrelicconfig[count.index].threshold_occurrences
   }
 
   warning {
-    operator              = "above"
-    threshold             = 3.5
-    threshold_duration    = 600
-    threshold_occurrences = "ALL"
+    operator              = var.newrelicconfig[count.index].warning_operator
+    threshold             = var.newrelicconfig[count.index].threshold
+    threshold_duration    = var.newrelicconfig[count.index].threshold_duration
+    threshold_occurrences =var.newrelicconfig[count.index].threshold_occurrences
   }
 }
