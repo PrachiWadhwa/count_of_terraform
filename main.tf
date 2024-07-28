@@ -10,10 +10,10 @@ resource "newrelic_nrql_alert_condition" "mypolicy" {
   name                           =  var.newrelicconfig[count.index].name
   description                    = "Alert when transactions are taking too long"
   runbook_url                    = "https://www.example.com"
-  enabled                        = true
+  enabled                        = var.newrelicconfig[count.index].enabled
   violation_time_limit_seconds   = 3600
   fill_option                    = "static"
-  fill_value                     = 1.0
+  fill_value                     =  var.newrelicconfig[count.index].fill_value
   aggregation_window             = 60
   aggregation_method             = "event_flow"
   aggregation_delay              = 120

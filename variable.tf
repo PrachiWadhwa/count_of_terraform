@@ -11,4 +11,6 @@ variable "region" {
 variable "newrelicconfig"{
 
     type= list(map(string))
+   
+
 }
